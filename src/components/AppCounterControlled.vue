@@ -1,43 +1,51 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
-  name: "AppCounter",
+  name: "AppCounterControlled",
 
   props: {
-    counterInitialValue: {
-      type: Number,
-      default: 0,
-    },
     title: {
       type: String,
     },
+
+    modelValue: {
+      type: Number,
+      required: true,
+    },
   },
 
-  setup(props) {
-    const myCounter = ref<number>(props.counterInitialValue);
+  emits: ["increment", "decrement"],
+
+  setup(props, { emit }) {
+    const myCounter = computed(() => props.modelValue);
 
     const increaseCounter = () => {
-      myCounter.value++;
+      emit("increment");
     };
 
     const decreaseCounter = () => {
-      myCounter.value--;
+      emit("decrement");
     };
 
     const cardTitle = computed(() => {
       return props.title || "Counter";
     });
 
-    return { cardTitle, myCounter, increaseCounter, decreaseCounter };
+    return {
+      cardTitle,
+      myCounter,
+      increaseCounter,
+      decreaseCounter,
+    };
   },
 });
 </script>
 
 <template>
   <VCard class="card">
-    <VCardTitle class="bg-grey">{{ cardTitle }}</VCardTitle>
-    <VCardSubtitle>Basic component</VCardSubtitle>
+    <VCardTitle class="bg-blue">{{ cardTitle }}</VCardTitle>
+    <VCardSubtitle>Controlled component</VCardSubtitle>
     <VContainer>
       <VRow align-content="center" justify="center">
         <VCol cols="auto">

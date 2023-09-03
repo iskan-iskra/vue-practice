@@ -1,8 +1,11 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { inject } from "vue";
+import { computed, defineComponent } from "vue";
+
+import { myInjectionKey } from "../provider/counterProvider";
 
 export default defineComponent({
-  name: "AppCounter",
+  name: "AppCounterContext",
 
   props: {
     counterInitialValue: {
@@ -15,33 +18,38 @@ export default defineComponent({
   },
 
   setup(props) {
-    const myCounter = ref<number>(props.counterInitialValue);
+    const injectedCount = inject(myInjectionKey);
 
     const increaseCounter = () => {
-      myCounter.value++;
+      injectedCount?.increment();
     };
 
     const decreaseCounter = () => {
-      myCounter.value--;
+      injectedCount?.decrement();
     };
 
     const cardTitle = computed(() => {
       return props.title || "Counter";
     });
 
-    return { cardTitle, myCounter, increaseCounter, decreaseCounter };
+    return {
+      count: injectedCount?.counter,
+      cardTitle,
+      increaseCounter,
+      decreaseCounter,
+    };
   },
 });
 </script>
 
 <template>
   <VCard class="card">
-    <VCardTitle class="bg-grey">{{ cardTitle }}</VCardTitle>
-    <VCardSubtitle>Basic component</VCardSubtitle>
+    <VCardTitle class="bg-purple">{{ cardTitle }}</VCardTitle>
+    <VCardSubtitle>Context</VCardSubtitle>
     <VContainer>
       <VRow align-content="center" justify="center">
         <VCol cols="auto">
-          <VChip>{{ myCounter }}</VChip>
+          <VChip>{{ count }}</VChip>
         </VCol>
       </VRow>
       <VRow align-content="center" justify="center">

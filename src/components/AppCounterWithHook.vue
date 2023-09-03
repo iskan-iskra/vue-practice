@@ -1,8 +1,11 @@
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
+
+import useCounter from "../use/useCounter";
+import { computed } from "vue";
 
 export default defineComponent({
-  name: "AppCounter",
+  name: "AppCounterWithHook",
 
   props: {
     counterInitialValue: {
@@ -15,15 +18,11 @@ export default defineComponent({
   },
 
   setup(props) {
-    const myCounter = ref<number>(props.counterInitialValue);
-
-    const increaseCounter = () => {
-      myCounter.value++;
-    };
-
-    const decreaseCounter = () => {
-      myCounter.value--;
-    };
+    const {
+      count: myCounter,
+      decrement: decreaseCounter,
+      increment: increaseCounter,
+    } = useCounter(props.counterInitialValue);
 
     const cardTitle = computed(() => {
       return props.title || "Counter";
@@ -36,8 +35,8 @@ export default defineComponent({
 
 <template>
   <VCard class="card">
-    <VCardTitle class="bg-grey">{{ cardTitle }}</VCardTitle>
-    <VCardSubtitle>Basic component</VCardSubtitle>
+    <VCardTitle class="bg-blue-grey">{{ cardTitle }}</VCardTitle>
+    <VCardSubtitle>Basic hook</VCardSubtitle>
     <VContainer>
       <VRow align-content="center" justify="center">
         <VCol cols="auto">
@@ -60,7 +59,7 @@ export default defineComponent({
   </VCard>
 </template>
 
-<style scoped lang="scss">
+<style scoped>
 .card {
   height: 100%;
 }
