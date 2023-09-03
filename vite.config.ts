@@ -8,5 +8,4 @@ export default defineConfig({
     vue(),
     vuetify({ autoImport: true }), // Enabled by default],
   ]
-
 })
