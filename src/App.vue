@@ -7,6 +7,7 @@ import { myInjectionKey } from "./provider/counterProvider";
 import AppCounter from "./components/AppCounter.vue";
 import AppCounterWithHook from "./components/AppCounterWithHook.vue";
 import AppCounterWithStore from "./components/AppCounterWithStore.vue";
+import AppCounterWithHookStore from "./components/AppCounterWithHookStore.vue";
 import AppCounterContext from "./components/AppCounterContext.vue";
 import useCounter from "./use/useCounter";
 import AppCounterControlled from "./components/AppCounterControlled.vue";
@@ -19,6 +20,7 @@ export default defineComponent({
     AppCounterWithStore,
     AppCounterContext,
     AppCounterControlled,
+    AppCounterWithHookStore,
   },
 
   setup() {
@@ -232,7 +234,7 @@ export default defineComponent({
           v-for="(card, index) in pair"
           :key="index"
         >
-          <AppCounterWithStore :title="`Counter - ${card}`" />
+          <AppCounterWithHookStore :title="`Counter - ${card}`" />
         </VCol>
         <VCol cols="12" sm="4" md="6" lg="6">
           <VCard class="card">
@@ -252,6 +254,45 @@ export default defineComponent({
                     <ul>
                       <li>less native for vue js</li>
                       <li>require hook knowledge</li>
+                    </ul>
+                  </VCol>
+                </VRow>
+              </VContainer>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol
+          cols="6"
+          sm="4"
+          md="3"
+          lg="3"
+          v-for="(card, index) in pair"
+          :key="index"
+        >
+          <AppCounterWithStore :title="`Counter - ${card}`" />
+        </VCol>
+        <VCol cols="12" sm="4" md="6" lg="6">
+          <VCard class="card">
+            <VCardTitle>Reactive store </VCardTitle>
+            <VCardText>
+              <VContainer>
+                <VRow>
+                  <VCol>
+                    <h4>advantages:</h4>
+                    <ul>
+                      <li>easy to transfer data in components tree</li>
+                      <li>easy to control and construct</li>
+                      <li>simple store based on reactive</li>
+                    </ul>
+                  </VCol>
+                  <VCol>
+                    <h4>disadvantages:</h4>
+                    <ul>
+                      <li>less native for vue js</li>
+                      <li>require hook knowledge</li>
+                      <li>no mutation in store</li>
                     </ul>
                   </VCol>
                 </VRow>
