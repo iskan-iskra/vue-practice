@@ -1,49 +1,46 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { counterStore } from "../store/counterStore.ts";
+
+import useCounterStore from "../use/useCounterStore";
 import { computed } from "vue";
 
 export default defineComponent({
-  name: "AppCounterContext",
+  name: "AppCounterWithHookStore",
+
   props: {
+    counterInitialValue: {
+      type: Number,
+      default: 0,
+    },
     title: {
       type: String,
     },
   },
+
   setup(props) {
+    const {
+      count: myCounter,
+      decrement: decreaseCounter,
+      increment: increaseCounter,
+    } = useCounterStore();
+
     const cardTitle = computed(() => {
       return props.title || "Counter";
     });
 
-    const counter = computed(() => {
-      return counterStore.counter;
-    });
-
-    const increaseCounter = () => {
-      counterStore.increment();
-    };
-
-    const decreaseCounter = () => {
-      counterStore.decrement();
-    };
-
-    return {
-      cardTitle,
-      counter,
-      increaseCounter,
-      decreaseCounter,
-    };
+    return { cardTitle, myCounter, increaseCounter, decreaseCounter };
   },
 });
 </script>
+
 <template>
   <VCard class="card">
-    <VCardTitle class="bg-red">{{ cardTitle }}</VCardTitle>
-    <VCardSubtitle>Store based on reactive</VCardSubtitle>
+    <VCardTitle class="bg-green">{{ cardTitle }}</VCardTitle>
+    <VCardSubtitle>Hook with store</VCardSubtitle>
     <VContainer>
       <VRow align-content="center" justify="center">
         <VCol cols="auto">
-          <VChip>{{ counter }}</VChip>
+          <VChip>{{ myCounter }}</VChip>
         </VCol>
       </VRow>
       <VRow align-content="center" justify="center">
@@ -61,3 +58,9 @@ export default defineComponent({
     </VContainer>
   </VCard>
 </template>
+
+<style scoped>
+.card {
+  height: 100%;
+}
+</style>
