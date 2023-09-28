@@ -275,7 +275,7 @@ export default defineComponent({
         </VCol>
         <VCol cols="12" sm="4" md="6" lg="6">
           <VCard class="card">
-            <VCardTitle>Hook with store </VCardTitle>
+            <VCardTitle>Reactive store </VCardTitle>
             <VCardText>
               <VContainer>
                 <VRow>
