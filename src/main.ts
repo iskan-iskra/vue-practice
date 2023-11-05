@@ -11,6 +11,15 @@ import * as directives from 'vuetify/directives'
 const vuetify = createVuetify({
     components,
     directives,
+
+
 })
 
-createApp(App).use(vuetify).mount('#app')
+
+const app = createApp(App)
+
+
+app.use(vuetify);
+
+app.mount('#app')
+
