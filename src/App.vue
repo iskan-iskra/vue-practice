@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, provide } from "vue";
+import {computed, defineComponent, onMounted, provide, ref} from "vue";
 
 import useCounterStore from "./use/useCounterStore";
 import { myInjectionKey } from "./provider/counterProvider";
@@ -11,6 +11,9 @@ import AppCounterWithHookStore from "./components/AppCounterWithHookStore.vue";
 import AppCounterContext from "./components/AppCounterContext.vue";
 import useCounter from "./use/useCounter";
 import AppCounterControlled from "./components/AppCounterControlled.vue";
+import {useTheme} from "vuetify";
+
+type TiTheme = 'dark' | 'light'
 
 export default defineComponent({
   name: "App",
@@ -25,6 +28,10 @@ export default defineComponent({
 
   setup() {
     const { setCount } = useCounterStore();
+
+    const currentThemeMode = ref<TiTheme>('light')
+
+    const theme = useTheme()
 
     const { count, decrement, increment } = useCounter(0);
 
@@ -42,11 +49,41 @@ export default defineComponent({
       decrement: decrement,
     });
 
+    const toggleTheme = () => {
+      currentThemeMode.value = currentThemeMode.value === 'light' ? 'dark' : 'light'
+      theme.global.name.value = currentThemeMode.value
+      localStorage.setItem('theme',currentThemeMode.value)
+    }
+
+    const themeInit = () => {
+      const localStorageTheme = localStorage.getItem('theme') as TiTheme
+      const listOfAllThemes = ['dark', 'light'] as TiTheme[]
+      if(localStorageTheme && listOfAllThemes.includes(localStorageTheme)) {
+        theme.global.name.value = localStorageTheme
+        currentThemeMode.value = localStorageTheme as TiTheme
+        theme.global.name.value = localStorageTheme
+      }
+    }
+
+    const themeTitle = computed<string>(()=>{
+      switch (currentThemeMode.value) {
+        case "light":
+          return 'Dark theme'
+        case "dark":
+          return 'Light theme'
+        default:
+          return 'Dark theme'
+      }
+    })
+
     onMounted(() => {
       setCount(5);
+      themeInit()
     });
 
     return {
+      toggleTheme,
+      themeTitle,
       pair,
       controlCounter,
       controlDecrement,
@@ -57,8 +94,13 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="header">
+      <VBtn @click="toggleTheme">{{themeTitle}}</VBtn>
+  </div>
+
   <VApp>
     <VContainer>
+
       <VRow>
         <VCol :cols="12">
           <h2>Independent components</h2>
@@ -308,5 +350,12 @@ export default defineComponent({
 <style scoped lang="scss">
 .card {
   height: 100%;
+}
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10000;
 }
 </style>
